@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Aplikasi Tes IQ Sederhana</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+<style>
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #333;
+  }
+  .container {
+    background: #fff;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    border-radius: 15px;
+    padding: 30px 35px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  h1 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #4b2cc0;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+  .question-number {
+    font-size: 18px;
+    font-weight: 600;
+    color: #6a5acd;
+    margin-bottom: 8px;
+    user-select: none;
+  }
+  .question {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 25px;
+    color: #3a2767;
+    min-height: 70px;
+    transition: opacity 0.4s ease;
+  }
+  .options {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 30px 0;
+  }
+  .options li {
+    margin-bottom: 15px;
+  }
+  label {
+    cursor: pointer;
+    display: block;
+    padding: 14px 22px;
+    border-radius: 10px;
+    background: #f3f4fb;
+    border: 2px solid transparent;
+    font-size: 17px;
+    color: #4a427b;
+    box-shadow: 0 3px 8px rgba(98, 90, 206, 0.1);
+    transition: background 0.3s, border-color 0.3s, color 0.3s;
+    user-select: none;
+  }
+  input[type="radio"] {
+    display: none;
+  }
+  input[type="radio"]:checked + label {
+    background: #6c63ff;
+    color: white;
+    border-color: #574de8;
+    box-shadow: 0 8px 15px rgba(108, 99, 255, 0.5);
+  }
+  input[type="radio"]:focus + label {
+    outline: 2px solid #8c85ff;
+    outline-offset: 2px;
+  }
+  .btn-container {
+    display: flex;
+    justify-content: space-between;
+  }
+  button {
+    background: #6c63ff;
+    border: none;
+    color: white;
+    padding: 14px 32px;
+    font-size: 17px;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 7px 20px rgba(108, 99, 255, 0.4);
+    transition: background 0.3s, box-shadow 0.3s;
+    user-select: none;
+  }
+  button:disabled {
+    background: #b4afff;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+  button:hover:not(:disabled) {
+    background: #584edc;
+    box-shadow: 0 10px 25px rgba(88, 78, 220, 0.6);
+  }
+  .result {
+    text-align: center;
+    font-size: 24px;
+    font-weight: 700;
+    color: #4b2cc0;
+  }
+  .explanation {
+    margin-top: 15px;
+    font-size: 18px;
+    color: #555;
+    line-height: 1.5;
+    user-select: text;
+  }
+  #share-btn {
+    margin: 25px auto 0;
+    display: block;
+    max-width: 220px;
+  }
+  @media (max-width: 480px) {
+    h1 {
+      font-size: 22px;
+    }
+    .question {
+      font-size: 19px;
+      min-height: auto;
+    }
+    label {
+      font-size: 15px;
+      padding: 12px 18px;
+    }
+    button {
+      padding: 12px 25px;
+      font-size: 15px;
+    }
+    #share-btn {
+      max-width: 100%;
+      width: 100%;
+    }
+  }
+  #start-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  #start-screen label {
+    font-size: 20px;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #4b2cc0;
+  }
+  #name-input {
+    padding: 14px 20px;
+    width: 100%;
+    max-width: 320px;
+    font-size: 18px;
+    border: 2px solid #6c63ff;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    outline: none;
+    transition: border-color 0.3s;
+  }
+  #name-input:focus {
+    border-color: #584edc;
+    box-shadow: 0 0 8px rgba(88, 78, 220, 0.8);
+  }
+  #start-btn {
+    background: #6c63ff;
+    color: white;
+    font-size: 18px;
+    padding: 14px 40px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 7px 20px rgba(108, 99, 255, 0.4);
+    transition: background 0.3s, box-shadow 0.3s;
+    user-select: none;
+  }
+  #start-btn:disabled {
+    background: #b4afff;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+  #start-btn:hover:not(:disabled) {
+    background: #584edc;
+    box-shadow: 0 10px 25px rgba(88, 78, 220, 0.6);
+  }
+</style>
+</head>
+<body>
+<div class="container" role="main" aria-label="Tes IQ Sederhana">
+
+  <div id="start-screen" aria-live="polite">
+    <h1>Selamat Datang!</h1>
+    <label for="name-input">Masukkan nama Anda untuk memulai tes</label>
+    <input type="text" id="name-input" placeholder="Nama Anda" aria-required="true" autocomplete="off" />
+    <button id="start-btn" disabled>Mulai Tes</button>
+  </div>
+
+  <div id="quiz-container" aria-live="polite" style="display:none;">
+    <div class="question-number" id="question-number"></div>
+    <div class="question" id="question-text"></div>
+    <ul class="options" id="options-list" role="radiogroup" aria-labelledby="question-text"></ul>
+    <div class="btn-container">
+      <button id="prev-btn" disabled aria-label="Pertanyaan sebelumnya">Sebelumnya</button>
+      <button id="next-btn" disabled aria-label="Pertanyaan berikutnya">Berikutnya</button>
+    </div>
+  </div>
+
+  <div id="result-container" style="display:none;">
+    <div class="result" id="result-score"></div>
+    <div class="explanation" id="result-explanation"></div>
+    <button id="share-btn" style="display:none;" aria-label="Bagikan Hasil Tes">Bagikan Hasil</button>
+  </div>
+
+</div>
+
+<script>
+  const quizData = [
+    {
+      question: "1. Manakah angka yang paling tepat untuk melengkapi pola? 2, 4, 8, 16, ...",
+      options: ["18", "20", "24", "32"],
+      answer: 3
+    },
+    {
+      question: "2. Jika semua bloops adalah razzies dan semua razzies adalah lazzies, maka semua bloops adalah ...",
+      options: ["Lazzies", "Razzies", "Bloops", "Tidak ada jawaban"],
+      answer: 0
+    },
+    {
+      question: "3. Pilih kata yang paling berbeda dari lainnya",
+      options: ["Mobil", "Sepeda", "Pesawat", "Sayur"],
+      answer: 3
+    },
+    {
+      question: "4. Jika hari ini Senin, 3 hari yang akan datang adalah hari ...",
+      options: ["Selasa", "Rabu", "Kamis", "Jumat"],
+      answer: 2
+    },
+    {
+      question: "5. Manakah bentuk yang bukan bagian dari kelompok?",
+      options: ["Segitiga", "Persegi", "Lingkaran", "Bola"],
+      answer: 3
+    }
+  ];
+
+  let currentQuestion = 0;
+  let answers = new Array(quizData.length).fill(null);
+  let userName = "";
+
+  const startScreen = document.getElementById('start-screen');
+  const nameInput = document.getElementById('name-input');
+  const startBtn = document.getElementById('start-btn');
+
+  const questionNumberEl = document.getElementById('question-number');
+  const questionTextEl = document.getElementById('question-text');
+  const optionsListEl = document.getElementById('options-list');
+  const prevBtn = document.getElementById('prev-btn');
+  const nextBtn = document.getElementById('next-btn');
+  const quizContainer = document.getElementById('quiz-container');
+  const resultContainer = document.getElementById('result-container');
+  const resultScore = document.getElementById('result-score');
+  const resultExplanation = document.getElementById('result-explanation');
+  const shareBtn = document.getElementById('share-btn');
+
+  // Aktifkan tombol mulai jika input nama tidak kosong
+  nameInput.addEventListener('input', () => {
+    startBtn.disabled = nameInput.value.trim().length === 0;
+  });
+
+  startBtn.addEventListener('click', () => {
+    userName = nameInput.value.trim();
+    if (userName.length === 0) return;
+    startScreen.style.display = 'none';
+    quizContainer.style.display = 'block';
+    loadQuestion();
+  });
+
+  function loadQuestion() {
+    const q = quizData[currentQuestion];
+
+    questionTextEl.style.opacity = '0';
+    optionsListEl.style.opacity = '0';
+
+    setTimeout(() => {
+      questionNumberEl.textContent = `Pertanyaan ${currentQuestion + 1} dari ${quizData.length}`;
+      questionTextEl.textContent = q.question;
+      optionsListEl.innerHTML = '';
+      q.options.forEach((option, index) => {
+        const li = document.createElement('li');
+        const radioId = `option${index}`;
+        li.innerHTML = `
+          <input type="radio" id="${radioId}" name="option" value="${index}" ${answers[currentQuestion] === index ? 'checked' : ''}/>
+          <label for="${radioId}">${option}</label>
+        `;
+        optionsListEl.appendChild(li);
+      });
+
+      prevBtn.disabled = currentQuestion === 0;
+      nextBtn.disabled = (answers[currentQuestion] === null);
+      nextBtn.textContent = currentQuestion === quizData.length - 1 ? 'Selesai' : 'Berikutnya';
+
+      questionTextEl.style.opacity = '1';
+      optionsListEl.style.opacity = '1';
+    }, 200);
+  }
+
+  optionsListEl.addEventListener('change', function(event) {
+    if (event.target.name === 'option') {
+      answers[currentQuestion] = parseInt(event.target.value);
+      nextBtn.disabled = false;
+    }
+  });
+
+  prevBtn.addEventListener('click', () => {
+    if (currentQuestion > 0) {
+      currentQuestion--;
+      loadQuestion();
+    }
+  });
+
+  nextBtn.addEventListener('click', () => {
+    if (answers[currentQuestion] === null) return; // safety
+
+    if (currentQuestion < quizData.length - 1) {
+      currentQuestion++;
+      loadQuestion();
+    } else {
+      showResult();
+    }
+  });
+
+  function showResult() {
+    let score = 0;
+    for (let i = 0; i < quizData.length; i++) {
+      if (answers[i] === quizData[i].answer) score++;
+    }
+    quizContainer.style.display = 'none';
+    resultContainer.style.display = 'block';
+    shareBtn.style.display = 'inline-block';
+
+    const resultText = `Halo, ${userName}! Skor Anda: ${score} dari ${quizData.length}.`;
+
+    resultScore.textContent = resultText;
+
+    let evalText = '';
+    if (score === quizData.length) {
+      evalText = 'Hebat! Skor Anda sangat tinggi dan menunjukkan IQ yang sangat baik.';
+    } else if (score >= quizData.length * 0.7) {
+      evalText = 'Bagus! Anda memiliki IQ di atas rata-rata.';
+    } else if (score >= quizData.length * 0.4) {
+      evalText = 'Cukup baik, masih banyak ruang untuk belajar dan berkembang.';
+    } else {
+      evalText = 'Perlu berlatih lebih banyak untuk meningkatkan kemampuan berpikir Anda.';
+    }
+    resultExplanation.textContent = evalText;
+  }
+
+  shareBtn.addEventListener('click', () => {
+    const shareData = {
+      title: 'Hasil Tes IQ Sederhana',
+      text: `${resultScore.textContent} ${resultExplanation.textContent}`
+    };
+
+    if (navigator.share) {
+      navigator.share(shareData).catch((err) => {
+        alert('Gagal berbagi: ' + err.message);
+      });
+    } else {
+      // Fallback untuk browser yang tidak mendukung Web Share API
+      alert(`Salin dan bagikan hasil Anda:\n\n${shareData.text}`);
+    }
+  });
+</script>
+</body>
+</html>
